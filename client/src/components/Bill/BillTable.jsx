@@ -29,9 +29,23 @@ export default function BillTable() {
   };
 
   const total = items.reduce((sum, item) => sum + item.price, 0);
+  const unassignedItems = items.filter(item => item.assignedTo.length === 0);
+  const canCalculate = items.length > 0 && participants.length >= 2 && unassignedItems.length === 0;
 
   return (
     <div>
+      {unassignedItems.length > 0 && (
+        <div className="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-xl mb-4">
+          {unassignedItems.length} item(s) not assigned to anyone
+        </div>
+      )}
+
+      {participants.length < 2 && items.length > 0 && (
+        <div className="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-xl mb-4">
+          Add at least 2 participants to split
+        </div>
+      )}
+
       <div className="space-y-3 mb-6">
         <AnimatePresence>
           {items.map((item) => (
@@ -40,7 +54,9 @@ export default function BillTable() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, x: -100 }}
-              className="border-2 border-gray-200 p-4 rounded-xl bg-white hover:shadow-md transition"
+              className={`border-2 p-4 rounded-xl bg-white hover:shadow-md transition ${
+                item.assignedTo.length === 0 ? 'border-yellow-300' : 'border-gray-200'
+              }`}
             >
               <div className="flex justify-between items-center mb-3">
                 <span className="font-semibold text-gray-800">{item.name}</span>
@@ -55,21 +71,25 @@ export default function BillTable() {
                 </div>
               </div>
 
-              <div className="flex gap-2 flex-wrap">
-                {participants.map((person) => (
-                  <button
-                    key={person}
-                    onClick={() => toggleAssign(item.id, person)}
-                    className={`px-3 py-1 rounded-full text-sm font-medium transition ${
-                      item.assignedTo.includes(person)
-                        ? "bg-green-500 text-white shadow-md"
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                    }`}
-                  >
-                    {person}
-                  </button>
-                ))}
-              </div>
+              {participants.length === 0 ? (
+                <p className="text-sm text-gray-500">Add participants first</p>
+              ) : (
+                <div className="flex gap-2 flex-wrap">
+                  {participants.map((person) => (
+                    <button
+                      key={person}
+                      onClick={() => toggleAssign(item.id, person)}
+                      className={`px-3 py-1 rounded-full text-sm font-medium transition ${
+                        item.assignedTo.includes(person)
+                          ? "bg-green-500 text-white shadow-md"
+                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      }`}
+                    >
+                      {person}
+                    </button>
+                  ))}
+                </div>
+              )}
             </motion.div>
           ))}
         </AnimatePresence>
@@ -86,10 +106,13 @@ export default function BillTable() {
 
       <button
         onClick={() => navigate("/summary")}
-        disabled={items.length === 0 || participants.length === 0}
+        disabled={!canCalculate}
         className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
       >
-        Calculate Split 📊
+        {!canCalculate && items.length === 0 && "Add items to calculate"}
+        {!canCalculate && items.length > 0 && participants.length < 2 && "Add at least 2 participants"}
+        {!canCalculate && unassignedItems.length > 0 && participants.length >= 2 && "Assign all items"}
+        {canCalculate && "Calculate Split 📊"}
       </button>
     </div>
   );

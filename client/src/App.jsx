@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { BillProvider } from "./context/BillContext";
+import ErrorBoundary from "./components/Common/ErrorBoundary";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -12,21 +13,23 @@ import PreviewPage from "./pages/PreviewPage";
 
 function App() {
   return (
-    <AuthProvider>
-      <BillProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/" element={<Home />} />
-            <Route path="/preview" element={<PreviewPage />} />
-            <Route path="/upload" element={<UploadPage />} />
-            <Route path="/edit" element={<BillEditor />} />
-            <Route path="/summary" element={<Summary />} />
-          </Routes>
-        </BrowserRouter>
-      </BillProvider>
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <BillProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/preview" element={<PreviewPage />} />
+              <Route path="/upload" element={<UploadPage />} />
+              <Route path="/edit" element={<BillEditor />} />
+              <Route path="/summary" element={<Summary />} />
+            </Routes>
+          </BrowserRouter>
+        </BillProvider>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 

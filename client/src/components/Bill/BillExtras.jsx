@@ -12,42 +12,62 @@ export default function BillExtras() {
     setPaidBy,
   } = useContext(BillContext);
 
+  const handleTaxChange = (value) => {
+    const num = parseFloat(value) || 0;
+    if (num < 0) return;
+    if (num > 100000) return;
+    setTax(num);
+  };
+
+  const handleDiscountChange = (value) => {
+    const num = parseFloat(value) || 0;
+    if (num < 0) return;
+    if (num > 100000) return;
+    setDiscount(num);
+  };
+
   return (
-    <div className="mb-6 bg-white p-4 rounded shadow">
-      <h3 className="font-semibold mb-4">Bill Details</h3>
+    <div>
+      <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+        📊 Bill Details
+      </h3>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* GST */}
         <div>
-          <label className="block text-sm mb-1">GST / Tax</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">GST / Tax (₹)</label>
           <input
             type="number"
             value={tax}
-            onChange={(e) => setTax(Number(e.target.value))}
-            className="border px-3 py-1 rounded w-full"
+            min="0"
+            max="100000"
+            step="0.01"
+            onChange={(e) => handleTaxChange(e.target.value)}
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition"
           />
         </div>
 
-        {/* Discount */}
         <div>
-          <label className="block text-sm mb-1">Discount</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Discount (₹)</label>
           <input
             type="number"
             value={discount}
-            onChange={(e) => setDiscount(Number(e.target.value))}
-            className="border px-3 py-1 rounded w-full"
+            min="0"
+            max="100000"
+            step="0.01"
+            onChange={(e) => handleDiscountChange(e.target.value)}
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition"
           />
         </div>
 
-        {/* Paid By */}
         <div>
-          <label className="block text-sm mb-1">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             Who Paid Full Bill?
           </label>
           <select
             value={paidBy}
             onChange={(e) => setPaidBy(e.target.value)}
-            className="border px-3 py-1 rounded w-full"
+            disabled={participants.length === 0}
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <option value="">Select</option>
             {participants.map((person) => (

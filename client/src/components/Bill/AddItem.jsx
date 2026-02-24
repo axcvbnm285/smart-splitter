@@ -6,13 +6,34 @@ export default function AddItem() {
   const { items, setItems } = useContext(BillContext);
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
+  const [error, setError] = useState("");
 
   const addItem = () => {
-    if (!name || !price) return;
+    setError("");
+    
+    if (!name.trim()) {
+      setError("Item name is required");
+      return;
+    }
+    
+    if (!price || parseFloat(price) <= 0) {
+      setError("Price must be greater than 0");
+      return;
+    }
+
+    if (parseFloat(price) > 1000000) {
+      setError("Price too high");
+      return;
+    }
+
+    if (items.some(item => item.name.toLowerCase() === name.trim().toLowerCase())) {
+      setError("Item already exists");
+      return;
+    }
 
     const newItem = {
       id: Date.now(),
-      name,
+      name: name.trim(),
       price: Number(price),
       assignedTo: [],
     };
@@ -28,11 +49,18 @@ export default function AddItem() {
         🛒 Add Items
       </h3>
 
+      {error && (
+        <div className="bg-red-100 text-red-700 px-4 py-2 rounded-xl mb-3">
+          {error}
+        </div>
+      )}
+
       <div className="flex gap-2">
         <input
           type="text"
           placeholder="Item name"
           value={name}
+          maxLength={50}
           onChange={(e) => setName(e.target.value)}
           className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition"
         />
@@ -40,6 +68,9 @@ export default function AddItem() {
           type="number"
           placeholder="Price"
           value={price}
+          min="0.01"
+          max="1000000"
+          step="0.01"
           onChange={(e) => setPrice(e.target.value)}
           className="w-32 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition"
         />

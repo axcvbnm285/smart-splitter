@@ -5,10 +5,30 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function AddParticipants() {
   const { participants, setParticipants } = useContext(BillContext);
   const [name, setName] = useState("");
+  const [error, setError] = useState("");
 
   const addParticipant = () => {
-    if (!name.trim()) return;
-    if (participants.includes(name.trim())) return;
+    setError("");
+    
+    if (!name.trim()) {
+      setError("Name is required");
+      return;
+    }
+
+    if (name.trim().length < 2) {
+      setError("Name must be at least 2 characters");
+      return;
+    }
+
+    if (participants.length >= 20) {
+      setError("Maximum 20 participants allowed");
+      return;
+    }
+
+    if (participants.some(p => p.toLowerCase() === name.trim().toLowerCase())) {
+      setError("Participant already added");
+      return;
+    }
 
     setParticipants([...participants, name.trim()]);
     setName("");
@@ -24,10 +44,17 @@ export default function AddParticipants() {
         👥 Participants
       </h3>
 
+      {error && (
+        <div className="bg-red-100 text-red-700 px-4 py-2 rounded-xl mb-3">
+          {error}
+        </div>
+      )}
+
       <div className="flex gap-2 mb-4">
         <input
           type="text"
           value={name}
+          maxLength={30}
           onChange={(e) => setName(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && addParticipant()}
           placeholder="Enter name"
