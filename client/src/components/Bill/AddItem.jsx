@@ -3,7 +3,7 @@ import { BillContext } from "../../context/BillContext";
 import { motion } from "framer-motion";
 
 export default function AddItem() {
-  const { items, setItems } = useContext(BillContext);
+  const { items, setItems, payments, tax, discount } = useContext(BillContext);
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [error, setError] = useState("");
@@ -29,6 +29,16 @@ export default function AddItem() {
     if (items.some(item => item.name.toLowerCase() === name.trim().toLowerCase())) {
       setError("Item already exists");
       return;
+    }
+
+    const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
+    if (totalPaid > 0) {
+      const currentTotal = items.reduce((sum, item) => sum + item.price, 0);
+      const newTotal = currentTotal + parseFloat(price) + tax - discount;
+      if (newTotal > totalPaid) {
+        setError(`Total items cannot exceed upfront payments (₹${totalPaid.toFixed(2)})`);
+        return;
+      }
     }
 
     const newItem = {

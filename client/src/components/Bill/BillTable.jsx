@@ -24,6 +24,19 @@ export default function BillTable() {
     setItems(updated);
   };
 
+  const selectAllForItem = (itemId) => {
+    const updated = items.map((item) => {
+      if (item.id === itemId) {
+        return {
+          ...item,
+          assignedTo: [...participants],
+        };
+      }
+      return item;
+    });
+    setItems(updated);
+  };
+
   const removeItem = (itemId) => {
     setItems(items.filter((item) => item.id !== itemId));
   };
@@ -74,21 +87,29 @@ export default function BillTable() {
               {participants.length === 0 ? (
                 <p className="text-sm text-gray-500">Add participants first</p>
               ) : (
-                <div className="flex gap-2 flex-wrap">
-                  {participants.map((person) => (
-                    <button
-                      key={person}
-                      onClick={() => toggleAssign(item.id, person)}
-                      className={`px-3 py-1 rounded-full text-sm font-medium transition ${
-                        item.assignedTo.includes(person)
-                          ? "bg-green-500 text-white shadow-md"
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                      }`}
-                    >
-                      {person}
-                    </button>
-                  ))}
-                </div>
+                <>
+                  <button
+                    onClick={() => selectAllForItem(item.id)}
+                    className="px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-600 hover:bg-indigo-200 transition mb-2"
+                  >
+                    Select All
+                  </button>
+                  <div className="flex gap-2 flex-wrap">
+                    {participants.map((person) => (
+                      <button
+                        key={person}
+                        onClick={() => toggleAssign(item.id, person)}
+                        className={`px-3 py-1 rounded-full text-sm font-medium transition ${
+                          item.assignedTo.includes(person)
+                            ? "bg-green-500 text-white shadow-md"
+                            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                        }`}
+                      >
+                        {person}
+                      </button>
+                    ))}
+                  </div>
+                </>
               )}
             </motion.div>
           ))}

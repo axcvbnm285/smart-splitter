@@ -102,6 +102,12 @@ export default function Home() {
               >
                 Upload Bill 📸
               </button>
+              <button
+                onClick={() => navigate("/history")}
+                className="px-8 py-4 bg-white/80 backdrop-blur-sm text-indigo-600 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-indigo-200"
+              >
+                My Bills 📋
+              </button>
             </motion.div>
           ) : (
             <motion.div

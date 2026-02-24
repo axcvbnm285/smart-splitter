@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import billRoutes from "./routes/billRoutes.js";
+import billSaveRoutes from "./routes/billSaveRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -15,5 +16,6 @@ app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/bill", billRoutes);
+app.use("/api/bills", billSaveRoutes);
 
 export default app;

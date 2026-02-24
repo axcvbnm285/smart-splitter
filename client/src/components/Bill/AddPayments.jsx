@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { BillContext } from "../../context/BillContext";
 
 export default function AddPayments() {
-  const { participants, payments, setPayments, items } = useContext(BillContext);
+  const { participants, payments, setPayments, items, tax, discount } = useContext(BillContext);
   const [selectedPerson, setSelectedPerson] = useState("");
   const [amount, setAmount] = useState("");
   const [error, setError] = useState("");
@@ -22,6 +22,12 @@ export default function AddPayments() {
 
     if (parseFloat(amount) > 1000000) {
       setError("Amount too high");
+      return;
+    }
+
+    const newTotalPaid = totalPaid + parseFloat(amount);
+    if (totalBill > 0 && newTotalPaid > totalBill + tax - discount) {
+      setError(`Total payments cannot exceed bill amount (₹${(totalBill + tax - discount).toFixed(2)})`);
       return;
     }
 

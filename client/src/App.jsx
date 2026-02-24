@@ -10,6 +10,7 @@ import BillEditor from "./pages/BillEditor";
 import Summary from "./pages/Summary";
 import UploadPage from "./pages/UploadPage";
 import PreviewPage from "./pages/PreviewPage";
+import BillsHistory from "./pages/BillsHistory";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
               <Route path="/upload" element={<UploadPage />} />
               <Route path="/edit" element={<BillEditor />} />
               <Route path="/summary" element={<Summary />} />
+              <Route path="/history" element={<BillsHistory />} />
             </Routes>
           </BrowserRouter>
         </BillProvider>
