@@ -94,6 +94,7 @@ Format:
 
   } catch (error) {
     console.error("PROCESS ERROR:", error);
-    res.status(500).json({ error: "Processing Failed" });
+    console.error("Error details:", error.message);
+    res.status(500).json({ error: "Processing Failed", details: error.message });
   }
 };
