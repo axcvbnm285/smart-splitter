@@ -1,4 +1,3 @@
-import fs from "fs";
 import Groq from "groq-sdk";
 import dotenv from "dotenv";
 
@@ -16,15 +15,8 @@ export const uploadBill = async (req, res) => {
       return res.status(400).json({ error: "No file uploaded" });
     }
 
-    const filePath = req.file.path;
-
-    // Convert image to base64
-    const imageBase64 = fs.readFileSync(filePath, {
-      encoding: "base64",
-    });
-
-    // Delete file after reading
-    fs.unlinkSync(filePath);
+    // File is in memory buffer
+    const imageBase64 = req.file.buffer.toString("base64");
 
     const completion = await groq.chat.completions.create({
       model: "meta-llama/llama-4-scout-17b-16e-instruct", // check latest model name
