@@ -4,6 +4,8 @@ import { AuthContext } from "../context/AuthContext";
 import { motion } from "framer-motion";
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
 export default function BillsHistory() {
   const [bills, setBills] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,7 +22,7 @@ export default function BillsHistory() {
 
   const fetchBills = async () => {
     try {
-      const { data } = await axios.get("http://localhost:8000/api/bills/");
+      const { data } = await axios.get(`${API_URL}/api/bills/`);
       setBills(data.bills);
     } catch (error) {
       console.error("Failed to fetch bills:", error);
@@ -32,7 +34,7 @@ export default function BillsHistory() {
   const deleteBill = async (id) => {
     if (!confirm("Delete this bill?")) return;
     try {
-      await axios.delete(`http://localhost:8000/api/bills/${id}`);
+      await axios.delete(`${API_URL}/api/bills/${id}`);
       setBills(bills.filter(b => b._id !== id));
     } catch (error) {
       alert("Failed to delete bill");

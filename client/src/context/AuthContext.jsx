@@ -3,6 +3,8 @@ import axios from "axios";
 
 export const AuthContext = createContext();
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -16,7 +18,7 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
   const login = async (email, password) => {
-    const { data } = await axios.post("http://localhost:8000/api/auth/login", { email, password });
+    const { data } = await axios.post(`${API_URL}/api/auth/login`, { email, password });
     localStorage.setItem("token", data.token);
     localStorage.setItem("user", JSON.stringify(data.user));
     setToken(data.token);
@@ -24,7 +26,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (name, email, password) => {
-    const { data } = await axios.post("http://localhost:8000/api/auth/register", { name, email, password });
+    const { data } = await axios.post(`${API_URL}/api/auth/register`, { name, email, password });
     localStorage.setItem("token", data.token);
     localStorage.setItem("user", JSON.stringify(data.user));
     setToken(data.token);

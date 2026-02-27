@@ -10,6 +10,8 @@ import { motion } from "framer-motion";
 import { WhatsappShareButton, WhatsappIcon } from "react-share";
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
 export default function Result() {
   const { items, participants, tax, discount, payments } = useContext(BillContext);
   const { user } = useContext(AuthContext);
@@ -84,7 +86,7 @@ export default function Result() {
 
     setSaving(true);
     try {
-      await axios.post("http://localhost:8000/api/bills/save", {
+      await axios.post(`${API_URL}/api/bills/save`, {
         title: billTitle,
         participants,
         items,
