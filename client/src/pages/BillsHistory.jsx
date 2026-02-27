@@ -22,7 +22,7 @@ export default function BillsHistory() {
 
   const fetchBills = async () => {
     try {
-      const { data } = await axios.get(`${API_URL}/api/bills/`);
+      const { data } = await axios.get(`${API_URL}/bills/`);
       setBills(data.bills);
     } catch (error) {
       console.error("Failed to fetch bills:", error);
@@ -34,7 +34,7 @@ export default function BillsHistory() {
   const deleteBill = async (id) => {
     if (!confirm("Delete this bill?")) return;
     try {
-      await axios.delete(`${API_URL}/api/bills/${id}`);
+      await axios.delete(`${API_URL}/bills/${id}`);
       setBills(bills.filter(b => b._id !== id));
     } catch (error) {
       alert("Failed to delete bill");

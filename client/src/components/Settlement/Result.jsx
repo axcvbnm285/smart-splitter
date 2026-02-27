@@ -86,7 +86,7 @@ export default function Result() {
 
     setSaving(true);
     try {
-      await axios.post(`${API_URL}/api/bills/save`, {
+      await axios.post(`${API_URL}/bills/save`, {
         title: billTitle,
         participants,
         items,
