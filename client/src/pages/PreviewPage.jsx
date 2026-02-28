@@ -76,6 +76,17 @@ export default function PreviewPage() {
         Review & Edit Extracted Bill
       </h2>
 
+      {/* Warning Banner */}
+      <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-lg">
+        <div className="flex items-start gap-3">
+          <span className="text-2xl">⚠️</span>
+          <div>
+            <p className="font-semibold">AI Extraction - Please Review</p>
+            <p className="text-sm">The bill data was extracted using AI and may contain errors. Please carefully review all items, quantities, and amounts before proceeding.</p>
+          </div>
+        </div>
+      </div>
+
       {/* Items Section */}
       <div className="space-y-4">
         {items.map((item, index) => (
