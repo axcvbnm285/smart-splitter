@@ -63,7 +63,7 @@ export default function BillsHistory() {
           >
             ← Back to Home
           </button>
-          <h2 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
             📋 My Bills
           </h2>
         </motion.div>

@@ -50,7 +50,7 @@ export default function AddParticipants() {
         </div>
       )}
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex flex-col sm:flex-row gap-2 mb-4">
         <input
           type="text"
           value={name}
@@ -58,11 +58,11 @@ export default function AddParticipants() {
           onChange={(e) => setName(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && addParticipant()}
           placeholder="Enter name"
-          className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition"
+          className="w-full flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition"
         />
         <button
           onClick={addParticipant}
-          className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition shadow-md hover:shadow-lg"
+          className="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition shadow-md hover:shadow-lg"
         >
           Add
         </button>

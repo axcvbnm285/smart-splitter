@@ -71,10 +71,10 @@ export default function BillTable() {
                 item.assignedTo.length === 0 ? 'border-yellow-300' : 'border-gray-200'
               }`}
             >
-              <div className="flex justify-between items-center mb-3">
-                <span className="font-semibold text-gray-800">{item.name}</span>
+              <div className="flex justify-between items-start sm:items-center gap-3 mb-3">
+                <span className="font-semibold text-gray-800 break-words">{item.name}</span>
                 <div className="flex items-center gap-2">
-                  <span className="text-lg font-bold text-indigo-600">₹{item.price}</span>
+                  <span className="text-base sm:text-lg font-bold text-indigo-600">₹{item.price}</span>
                   <button
                     onClick={() => removeItem(item.id)}
                     className="text-red-500 hover:bg-red-50 rounded-full w-6 h-6 flex items-center justify-center transition"
@@ -118,7 +118,7 @@ export default function BillTable() {
 
       {items.length > 0 && (
         <div className="border-t-2 border-gray-200 pt-4 mb-6">
-          <div className="flex justify-between items-center text-xl font-bold">
+          <div className="flex justify-between items-center text-lg sm:text-xl font-bold">
             <span>Total</span>
             <span className="text-indigo-600">₹{total.toFixed(2)}</span>
           </div>
@@ -128,7 +128,7 @@ export default function BillTable() {
       <button
         onClick={() => navigate("/summary")}
         disabled={!canCalculate}
-        className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+        className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-bold text-base sm:text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
       >
         {!canCalculate && items.length === 0 && "Add items to calculate"}
         {!canCalculate && items.length > 0 && participants.length < 2 && "Add at least 2 participants"}

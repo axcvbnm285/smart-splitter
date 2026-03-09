@@ -14,14 +14,14 @@ export default function BillEditor() {
   const { user } = useContext(AuthContext);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 py-6 sm:py-8 px-4">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className="max-w-6xl mx-auto mb-8"
       >
-        <div className="flex justify-between items-center bg-white/80 backdrop-blur-md rounded-2xl shadow-lg p-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center bg-white/80 backdrop-blur-md rounded-2xl shadow-lg p-4 sm:p-6">
           <div>
             <button
               onClick={() => navigate("/")}
@@ -29,13 +29,13 @@ export default function BillEditor() {
             >
               ← Back to Home
             </button>
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
               Create Your Bill
             </h2>
           </div>
           <button
             onClick={() => navigate("/upload")}
-            className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 font-semibold"
+            className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 font-semibold"
           >
             📸 Scan Bill
           </button>
@@ -51,19 +51,19 @@ export default function BillEditor() {
           transition={{ delay: 0.1 }}
           className="lg:col-span-2 space-y-6"
         >
-          <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg p-6">
+          <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg p-4 sm:p-6">
             <AddParticipants />
           </div>
           
-          <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg p-6">
+          <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg p-4 sm:p-6">
             <AddPayments />
           </div>
           
-          <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg p-6">
+          <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg p-4 sm:p-6">
             <AddItem />
           </div>
           
-          <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg p-6">
+          <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg p-4 sm:p-6">
             <BillExtras />
           </div>
         </motion.div>
@@ -75,7 +75,7 @@ export default function BillEditor() {
           transition={{ delay: 0.2 }}
           className="lg:col-span-1"
         >
-          <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg p-6 sticky top-8">
+          <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg p-4 sm:p-6 lg:sticky lg:top-8">
             <h3 className="text-xl font-bold mb-4 text-gray-800">Bill Items</h3>
             <BillTable />
           </div>

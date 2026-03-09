@@ -65,14 +65,14 @@ export default function AddItem() {
         </div>
       )}
 
-      <div className="flex gap-2">
+      <div className="flex flex-col sm:flex-row gap-2">
         <input
           type="text"
           placeholder="Item name"
           value={name}
           maxLength={50}
           onChange={(e) => setName(e.target.value)}
-          className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition"
+          className="w-full flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition"
         />
         <input
           type="number"
@@ -82,11 +82,11 @@ export default function AddItem() {
           max="1000000"
           step="0.01"
           onChange={(e) => setPrice(e.target.value)}
-          className="w-32 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition"
+          className="w-full sm:w-32 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition"
         />
         <button
           onClick={addItem}
-          className="px-6 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition shadow-md hover:shadow-lg"
+          className="w-full sm:w-auto px-6 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition shadow-md hover:shadow-lg"
         >
           Add
         </button>

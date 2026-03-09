@@ -64,11 +64,11 @@ export default function AddPayments() {
         </div>
       )}
 
-      <div className="flex gap-2 mb-3">
+      <div className="flex flex-col sm:flex-row gap-2 mb-3">
         <select
           value={selectedPerson}
           onChange={(e) => setSelectedPerson(e.target.value)}
-          className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition"
+          className="w-full flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition"
         >
           <option value="">Select person</option>
           {participants.map((p) => (
@@ -85,12 +85,12 @@ export default function AddPayments() {
           step="0.01"
           onChange={(e) => setAmount(e.target.value)}
           placeholder="Amount"
-          className="w-32 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition"
+          className="w-full sm:w-32 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition"
         />
         <button
           onClick={addPayment}
           disabled={participants.length === 0}
-          className="px-6 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full sm:w-auto px-6 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Add
         </button>

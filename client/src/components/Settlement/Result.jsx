@@ -122,7 +122,7 @@ export default function Result() {
           >
             ← Back to Editor
           </button>
-          <h2 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-center">
             🎉 Settlement Summary
           </h2>
         </motion.div>
@@ -132,10 +132,10 @@ export default function Result() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.1 }}
-            className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl shadow-xl p-8 text-white text-center"
+            className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl shadow-xl p-6 sm:p-8 text-white text-center"
           >
             <p className="text-lg opacity-90 mb-2">Total Bill Amount</p>
-            <p className="text-5xl font-bold">₹{total.toFixed(2)}</p>
+            <p className="text-3xl sm:text-5xl font-bold">₹{total.toFixed(2)}</p>
           </motion.div>
 
           <motion.div
@@ -149,10 +149,10 @@ export default function Result() {
               {Object.entries(contributions).map(([person, amount]) => (
                 <div
                   key={person}
-                  className="flex justify-between items-center p-3 bg-gray-50 rounded-xl"
+                  className="flex justify-between items-center gap-3 p-3 bg-gray-50 rounded-xl"
                 >
                   <span className="font-semibold text-gray-700">{person}</span>
-                  <span className="text-xl font-bold text-indigo-600">
+                  <span className="text-lg sm:text-xl font-bold text-indigo-600">
                     <AnimatedNumber value={amount} />
                   </span>
                 </div>
@@ -183,20 +183,20 @@ export default function Result() {
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.4 + index * 0.1 }}
-                      className="flex justify-between items-center p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border-2 border-green-200"
+                      className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border-2 border-green-200"
                     >
-                      <div className="flex items-center gap-3">
+                      <div className="w-full sm:w-auto flex items-center gap-2 sm:gap-3 overflow-x-auto pb-1">
                         <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">
                           {settlement.from[0]}
                         </div>
                         <span className="font-semibold text-gray-700">{settlement.from}</span>
-                        <span className="text-2xl">→</span>
+                        <span className="text-xl sm:text-2xl">→</span>
                         <div className="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold">
                           {settlement.to[0]}
                         </div>
                         <span className="font-semibold text-gray-700">{settlement.to}</span>
                       </div>
-                      <span className="text-2xl font-bold text-green-600">
+                      <span className="text-xl sm:text-2xl font-bold text-green-600 self-end sm:self-auto">
                         <AnimatedNumber value={settlement.amount} />
                       </span>
                     </motion.div>
@@ -222,20 +222,20 @@ export default function Result() {
                       key={person}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      className="flex justify-between items-center p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border-2 border-green-200"
+                      className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border-2 border-green-200"
                     >
-                      <div className="flex items-center gap-3">
+                      <div className="w-full sm:w-auto flex items-center gap-2 sm:gap-3 overflow-x-auto pb-1">
                         <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">
                           {person[0]}
                         </div>
                         <span className="font-semibold text-gray-700">{person}</span>
-                        <span className="text-2xl">→</span>
+                        <span className="text-xl sm:text-2xl">→</span>
                         <div className="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold">
                           {paidBy[0]}
                         </div>
                         <span className="font-semibold text-gray-700">{paidBy}</span>
                       </div>
-                      <span className="text-2xl font-bold text-green-600">
+                      <span className="text-xl sm:text-2xl font-bold text-green-600 self-end sm:self-auto">
                         <AnimatedNumber value={amount} />
                       </span>
                     </motion.div>
@@ -250,7 +250,7 @@ export default function Result() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="grid grid-cols-2 gap-3 mt-6"
+          className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6"
         >
           <button
             onClick={() => setShowSaveDialog(true)}

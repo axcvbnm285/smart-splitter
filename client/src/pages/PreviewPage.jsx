@@ -70,9 +70,9 @@ export default function PreviewPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-8 space-y-6">
+    <div className="max-w-4xl mx-auto p-4 sm:p-8 space-y-6">
 
-      <h2 className="text-3xl font-bold">
+      <h2 className="text-2xl sm:text-3xl font-bold">
         Review & Edit Extracted Bill
       </h2>
 
@@ -92,14 +92,14 @@ export default function PreviewPage() {
         {items.map((item, index) => (
           <div
             key={index}
-            className="bg-white p-4 rounded-xl shadow flex gap-4 items-center"
+            className="bg-white p-4 rounded-xl shadow flex flex-col sm:flex-row gap-3 sm:gap-4 sm:items-center"
           >
             <input
               value={item.name}
               onChange={(e) =>
                 handleItemChange(index, "name", e.target.value)
               }
-              className="border p-2 flex-1 rounded"
+              className="border p-2 w-full flex-1 rounded"
             />
 
             <input
@@ -108,7 +108,7 @@ export default function PreviewPage() {
               onChange={(e) =>
                 handleItemChange(index, "quantity", e.target.value)
               }
-              className="border p-2 w-20 rounded"
+              className="border p-2 w-full sm:w-24 rounded"
             />
 
             <input
@@ -117,12 +117,12 @@ export default function PreviewPage() {
               onChange={(e) =>
                 handleItemChange(index, "total", e.target.value)
               }
-              className="border p-2 w-28 rounded"
+              className="border p-2 w-full sm:w-32 rounded"
             />
 
             <button
               onClick={() => handleDelete(index)}
-              className="text-red-500 font-bold"
+              className="w-full sm:w-auto text-red-500 font-bold border border-red-200 rounded px-3 py-2 sm:p-0 sm:border-0"
             >
               ✕
             </button>
@@ -138,13 +138,13 @@ export default function PreviewPage() {
       </button>
 
       {/* Tax Section */}
-      <div className="flex gap-4 mt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mt-6">
         <input
           type="number"
           value={cgst}
           onChange={(e) => setCgst(e.target.value)}
           placeholder="CGST"
-          className="border p-2 rounded"
+          className="border p-2 rounded w-full"
         />
 
         <input
@@ -152,7 +152,7 @@ export default function PreviewPage() {
           value={sgst}
           onChange={(e) => setSgst(e.target.value)}
           placeholder="SGST"
-          className="border p-2 rounded"
+          className="border p-2 rounded w-full"
         />
 
         <input
@@ -160,7 +160,7 @@ export default function PreviewPage() {
           value={discount}
           onChange={(e) => setLocalDiscount(e.target.value)}
           placeholder="Discount"
-          className="border p-2 rounded"
+          className="border p-2 rounded w-full"
         />
       </div>
 

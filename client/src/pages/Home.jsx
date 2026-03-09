@@ -18,7 +18,7 @@ export default function Home() {
       </div>
 
       {/* Navigation */}
-      <nav className="relative z-10 flex justify-between items-center px-8 py-6">
+      <nav className="relative z-10 flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center px-4 sm:px-8 py-6">
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -31,13 +31,13 @@ export default function Home() {
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="flex items-center gap-4 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg"
+            className="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-4 bg-white/80 backdrop-blur-sm px-4 sm:px-6 py-3 rounded-2xl sm:rounded-full shadow-lg"
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 min-w-0">
               <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold">
                 {user.name[0].toUpperCase()}
               </div>
-              <span className="font-medium text-gray-700">{user.name}</span>
+              <span className="font-medium text-gray-700 truncate">{user.name}</span>
             </div>
             <button 
               onClick={logout} 
@@ -58,7 +58,7 @@ export default function Home() {
           className="text-center max-w-4xl"
         >
           <motion.h1 
-            className="text-7xl md:text-8xl font-extrabold mb-6"
+            className="text-4xl sm:text-6xl md:text-8xl font-extrabold mb-6"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
@@ -73,7 +73,7 @@ export default function Home() {
           </motion.h1>
 
           <motion.p 
-            className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto"
+            className="text-base sm:text-lg md:text-xl text-gray-600 mb-10 sm:mb-12 max-w-2xl mx-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
@@ -87,24 +87,24 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="flex gap-4 justify-center"
+              className="w-full flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center"
             >
               <button
                 onClick={() => navigate("/edit")}
-                className="group relative px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                className="group relative w-full sm:w-auto px-6 sm:px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-semibold text-base sm:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
               >
                 <span className="relative z-10">Start Splitting 🚀</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </button>
               <button
                 onClick={() => navigate("/upload")}
-                className="px-8 py-4 bg-white/80 backdrop-blur-sm text-indigo-600 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-indigo-200"
+                className="w-full sm:w-auto px-6 sm:px-8 py-4 bg-white/80 backdrop-blur-sm text-indigo-600 rounded-2xl font-semibold text-base sm:text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-indigo-200"
               >
                 Upload Bill 📸
               </button>
               <button
                 onClick={() => navigate("/history")}
-                className="px-8 py-4 bg-white/80 backdrop-blur-sm text-indigo-600 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-indigo-200"
+                className="w-full sm:w-auto px-6 sm:px-8 py-4 bg-white/80 backdrop-blur-sm text-indigo-600 rounded-2xl font-semibold text-base sm:text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-indigo-200"
               >
                 My Bills 📋
               </button>
@@ -114,17 +114,17 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="flex gap-4 justify-center"
+              className="w-full flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center"
             >
               <button
                 onClick={() => navigate("/login")}
-                className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                className="w-full sm:w-auto px-6 sm:px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-semibold text-base sm:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
               >
                 Login
               </button>
               <button
                 onClick={() => navigate("/register")}
-                className="px-8 py-4 bg-white/80 backdrop-blur-sm text-indigo-600 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-indigo-200"
+                className="w-full sm:w-auto px-6 sm:px-8 py-4 bg-white/80 backdrop-blur-sm text-indigo-600 rounded-2xl font-semibold text-base sm:text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-indigo-200"
               >
                 Get Started
               </button>
@@ -137,7 +137,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7, duration: 0.8 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20 max-w-5xl"
+          className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mt-12 sm:mt-20 max-w-5xl w-full"
         >
           {[
             { icon: "📸", title: "Scan Bills", desc: "Upload receipts, we'll extract the data" },
