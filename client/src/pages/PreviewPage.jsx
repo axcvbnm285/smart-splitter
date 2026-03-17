@@ -54,13 +54,14 @@ export default function PreviewPage() {
     const formattedItems = items.map((item, index) => ({
       id: Date.now() + index,
       name: item.name,
-      price: Number(item.total || 0),
+      price: Number(item.total || item.price || 0),
       assignedTo: [],
     }));
 
+    console.log("Setting items:", formattedItems);
     setItems(formattedItems);
     setTax(calculatedTax);
-    setDiscount(Number(discount));
+    setDiscount(Number(discount || 0));
 
     navigate("/edit");
   };

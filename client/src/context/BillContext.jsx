@@ -16,15 +16,15 @@ export const BillProvider = ({ children }) => {
   const activeBill = bills.find(b => b.id === activeBillId) || bills[0];
 
   const setItems = (items) => {
-    setBills(bills.map(b => b.id === activeBillId ? { ...b, items } : b));
+    setBills(prev => prev.map(b => b.id === activeBillId ? { ...b, items } : b));
   };
 
   const setTax = (tax) => {
-    setBills(bills.map(b => b.id === activeBillId ? { ...b, tax } : b));
+    setBills(prev => prev.map(b => b.id === activeBillId ? { ...b, tax } : b));
   };
 
   const setDiscount = (discount) => {
-    setBills(bills.map(b => b.id === activeBillId ? { ...b, discount } : b));
+    setBills(prev => prev.map(b => b.id === activeBillId ? { ...b, discount } : b));
   };
 
   const addBill = () => {
