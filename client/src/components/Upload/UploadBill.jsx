@@ -89,7 +89,6 @@ export default function UploadBill() {
       <input
         type="file"
         accept="image/*"
-        capture="environment"
         onChange={handleUpload}
         className="mb-4"
       />
