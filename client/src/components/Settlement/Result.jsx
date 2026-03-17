@@ -2,7 +2,7 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BillContext } from "../../context/BillContext";
 import { AuthContext } from "../../context/AuthContext";
-import { calculateContribution } from "../../utils/calculateContribution";
+import { calculateContribution, calculateAllBillsContribution } from "../../utils/calculateContribution";
 import { calculateSettlement } from "../../utils/calculateSettlement";
 import AnimatedNumber from "../Common/AnimatedNumber";
 import confetti from "canvas-confetti";
@@ -13,7 +13,7 @@ import axios from "axios";
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export default function Result() {
-  const { items, participants, tax, discount, payments, paidBy } = useContext(BillContext);
+  const { items, participants, tax, discount, payments, paidBy, bills } = useContext(BillContext);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [saving, setSaving] = useState(false);
@@ -22,8 +22,8 @@ export default function Result() {
   const [showSaveDialog, setShowSaveDialog] = useState(false);
 
   const contributions = useMemo(() => {
-    return calculateContribution(items, participants, tax, discount);
-  }, [items, participants, tax, discount]);
+    return calculateAllBillsContribution(bills, participants);
+  }, [bills, participants]);
 
   const settlements = useMemo(() => {
     return calculateSettlement(contributions, payments);
