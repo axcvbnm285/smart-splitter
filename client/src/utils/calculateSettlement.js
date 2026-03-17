@@ -3,7 +3,7 @@ export function calculateSettlement(contributions, payments) {
 
   // Calculate what each person owes
   Object.keys(contributions).forEach((person) => {
-    balances[person] = contributions[person];
+    balances[person] = parseFloat(contributions[person].toFixed(2));
   });
 
   // Subtract what each person already paid

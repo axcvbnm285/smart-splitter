@@ -18,7 +18,10 @@ export function calculateContribution(items, participants, tax, discount) {
   participants.forEach((p) => {
     if (totalSubtotal === 0) return;
     const ratio = personTotals[p] / totalSubtotal;
-    personTotals[p] = personTotals[p] + ratio * tax - ratio * discount;
+    // Correct order: apply discount on subtotal, then add tax
+    personTotals[p] = (personTotals[p] - ratio * discount) + ratio * tax;
+    // Round to 2 decimal places to avoid floating point errors
+    personTotals[p] = parseFloat(personTotals[p].toFixed(2));
   });
 
   return personTotals;
