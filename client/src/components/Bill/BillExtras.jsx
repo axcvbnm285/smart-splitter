@@ -7,7 +7,7 @@ export default function BillExtras() {
     setTax,
     discount,
     setDiscount,
-    allParticipants: participants,
+    participants,
     paidBy,
     setPaidBy,
     items,

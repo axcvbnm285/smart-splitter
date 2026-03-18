@@ -6,11 +6,10 @@ export const BillProvider = ({ children }) => {
   // Global pool used for payments/paidBy dropdowns
   const [allParticipants, setAllParticipants] = useState([]);
   const [payments, setPayments] = useState([]);
-  const [paidBy, setPaidBy] = useState("");
 
   // Each bill has its own participants list
   const [bills, setBills] = useState([
-    { id: 1, name: "Bill 1", items: [], tax: 0, discount: 0, participants: [] }
+    { id: 1, name: "Bill 1", items: [], tax: 0, discount: 0, participants: [], paidBy: "" }
   ]);
   const [activeBillId, setActiveBillId] = useState(1);
 
@@ -59,7 +58,7 @@ export const BillProvider = ({ children }) => {
 
   const addBill = () => {
     const newId = Date.now();
-    setBills(prev => [...prev, { id: newId, name: `Bill ${prev.length + 1}`, items: [], tax: 0, discount: 0, participants: [] }]);
+    setBills(prev => [...prev, { id: newId, name: `Bill ${prev.length + 1}`, items: [], tax: 0, discount: 0, participants: [], paidBy: "" }]);
     setActiveBillId(newId);
   };
 
@@ -74,9 +73,14 @@ export const BillProvider = ({ children }) => {
     setBills(prev => prev.map(b => b.id === id ? { ...b, name } : b));
   };
 
+  const setPaidBy = (paidBy) => {
+    setBills(prev => prev.map(b => b.id === activeBillId ? { ...b, paidBy } : b));
+  };
+
   const items = activeBill.items;
   const tax = activeBill.tax;
   const discount = activeBill.discount;
+  const paidBy = activeBill.paidBy;
 
   return (
     <BillContext.Provider
@@ -92,10 +96,10 @@ export const BillProvider = ({ children }) => {
         setTax,
         discount,
         setDiscount,
-        paidBy,
-        setPaidBy,
         payments,
         setPayments,
+        paidBy,
+        setPaidBy,
         bills,
         activeBillId,
         setActiveBillId,

@@ -13,7 +13,7 @@ import axios from "axios";
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export default function Result() {
-  const { items, participants, tax, discount, payments, paidBy, bills, allParticipants } = useContext(BillContext);
+  const { items, participants, tax, discount, payments, bills, allParticipants } = useContext(BillContext);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [saving, setSaving] = useState(false);
@@ -25,9 +25,21 @@ export default function Result() {
     return calculateAllBillsContribution(bills);
   }, [bills]);
 
+  // Merge manual payments with per-bill paidBy (paidBy person paid the full bill total)
+  const allPayments = useMemo(() => {
+    const paidByPayments = bills
+      .filter(b => b.paidBy)
+      .map(b => {
+        const billContribs = calculateContribution(b.items, b.participants, b.tax, b.discount);
+        const billTotal = parseFloat(Object.values(billContribs).reduce((s, v) => s + v, 0).toFixed(2));
+        return { person: b.paidBy, amount: billTotal };
+      });
+    return [...payments, ...paidByPayments];
+  }, [bills, payments]);
+
   const settlements = useMemo(() => {
-    return calculateSettlement(contributions, payments);
-  }, [contributions, payments]);
+    return calculateSettlement(contributions, allPayments);
+  }, [contributions, allPayments]);
 
   useEffect(() => {
     if (settlements.length > 0) {
@@ -160,7 +172,7 @@ export default function Result() {
             </div>
           </motion.div>
 
-          {payments.length > 0 && (
+          {(payments.length > 0 || bills.some(b => b.paidBy)) && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -206,44 +218,7 @@ export default function Result() {
             </motion.div>
           )}
 
-          {payments.length === 0 && paidBy && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6"
-            >
-              <h3 className="text-xl font-bold text-gray-800 mb-4">🔄 Who Pays Whom</h3>
-              <div className="space-y-3">
-                {Object.entries(contributions).map(([person, amount]) => {
-                  if (person === paidBy) return null;
-                  return (
-                    <motion.div
-                      key={person}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border-2 border-green-200"
-                    >
-                      <div className="w-full sm:w-auto flex items-center gap-2 sm:gap-3 overflow-x-auto pb-1">
-                        <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">
-                          {person[0]}
-                        </div>
-                        <span className="font-semibold text-gray-700">{person}</span>
-                        <span className="text-xl sm:text-2xl">→</span>
-                        <div className="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold">
-                          {paidBy[0]}
-                        </div>
-                        <span className="font-semibold text-gray-700">{paidBy}</span>
-                      </div>
-                      <span className="text-xl sm:text-2xl font-bold text-green-600 self-end sm:self-auto">
-                        <AnimatedNumber value={amount} />
-                      </span>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </motion.div>
-          )}
+
         </div>
 
         <motion.div
