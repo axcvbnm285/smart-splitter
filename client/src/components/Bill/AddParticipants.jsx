@@ -3,40 +3,35 @@ import { BillContext } from "../../context/BillContext";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function AddParticipants() {
-  const { participants, setParticipants } = useContext(BillContext);
+  const { participants, addParticipantToBill, removeParticipantFromBill, allParticipants } = useContext(BillContext);
   const [name, setName] = useState("");
   const [error, setError] = useState("");
 
+  const validate = (n) => {
+    if (!n.trim()) return "Name is required";
+    if (n.trim().length < 2) return "Name must be at least 2 characters";
+    if (participants.length >= 20) return "Maximum 20 participants allowed";
+    if (participants.some(p => p.toLowerCase() === n.trim().toLowerCase())) return "Already in this bill";
+    return null;
+  };
+
   const addParticipant = () => {
     setError("");
-    
-    if (!name.trim()) {
-      setError("Name is required");
-      return;
-    }
-
-    if (name.trim().length < 2) {
-      setError("Name must be at least 2 characters");
-      return;
-    }
-
-    if (participants.length >= 20) {
-      setError("Maximum 20 participants allowed");
-      return;
-    }
-
-    if (participants.some(p => p.toLowerCase() === name.trim().toLowerCase())) {
-      setError("Participant already added");
-      return;
-    }
-
-    setParticipants([...participants, name.trim()]);
+    const err = validate(name);
+    if (err) { setError(err); return; }
+    addParticipantToBill(name.trim());
     setName("");
   };
 
-  const removeParticipant = (person) => {
-    setParticipants(participants.filter((p) => p !== person));
+  const quickAdd = (person) => {
+    const err = validate(person);
+    if (err) { setError(err); return; }
+    setError("");
+    addParticipantToBill(person);
   };
+
+  // People in global pool not yet in this bill
+  const available = allParticipants.filter(p => !participants.includes(p));
 
   return (
     <div>
@@ -68,6 +63,24 @@ export default function AddParticipants() {
         </button>
       </div>
 
+      {/* Quick-add from other bills */}
+      {available.length > 0 && (
+        <div className="mb-4">
+          <p className="text-xs text-gray-500 mb-2">Quick add from other bills:</p>
+          <div className="flex gap-2 flex-wrap">
+            {available.map(person => (
+              <button
+                key={person}
+                onClick={() => quickAdd(person)}
+                className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium hover:bg-indigo-200 transition"
+              >
+                + {person}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="flex gap-2 flex-wrap">
         <AnimatePresence>
           {participants.map((person) => (
@@ -80,7 +93,7 @@ export default function AddParticipants() {
             >
               <span className="font-medium">{person}</span>
               <button
-                onClick={() => removeParticipant(person)}
+                onClick={() => removeParticipantFromBill(person)}
                 className="hover:bg-white/20 rounded-full w-5 h-5 flex items-center justify-center transition"
               >
                 ✕

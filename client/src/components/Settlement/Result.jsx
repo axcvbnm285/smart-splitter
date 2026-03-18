@@ -13,7 +13,7 @@ import axios from "axios";
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export default function Result() {
-  const { items, participants, tax, discount, payments, paidBy, bills } = useContext(BillContext);
+  const { items, participants, tax, discount, payments, paidBy, bills, allParticipants } = useContext(BillContext);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [saving, setSaving] = useState(false);
@@ -22,8 +22,8 @@ export default function Result() {
   const [showSaveDialog, setShowSaveDialog] = useState(false);
 
   const contributions = useMemo(() => {
-    return calculateAllBillsContribution(bills, participants);
-  }, [bills, participants]);
+    return calculateAllBillsContribution(bills);
+  }, [bills]);
 
   const settlements = useMemo(() => {
     return calculateSettlement(contributions, payments);
@@ -39,7 +39,7 @@ export default function Result() {
     }
   }, [settlements]);
 
-  if (participants.length === 0) {
+  if (allParticipants.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center p-4">
         <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-8 text-center">

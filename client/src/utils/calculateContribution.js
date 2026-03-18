@@ -9,7 +9,9 @@ export function calculateContribution(items, participants, tax, discount) {
     if (item.assignedTo.length === 0) return;
     const share = item.price / item.assignedTo.length;
     item.assignedTo.forEach((person) => {
-      personTotals[person] += share;
+      if (personTotals[person] !== undefined) {
+        personTotals[person] += share;
+      }
     });
   });
 
@@ -18,23 +20,24 @@ export function calculateContribution(items, participants, tax, discount) {
   participants.forEach((p) => {
     if (totalSubtotal === 0) return;
     const ratio = personTotals[p] / totalSubtotal;
-    // Correct order: apply discount on subtotal, then add tax
     personTotals[p] = (personTotals[p] - ratio * discount) + ratio * tax;
-    // Round to 2 decimal places to avoid floating point errors
     personTotals[p] = parseFloat(personTotals[p].toFixed(2));
   });
 
   return personTotals;
 }
 
-export function calculateAllBillsContribution(bills, participants) {
+export function calculateAllBillsContribution(bills) {
+  // Collect all unique participants across all bills
+  const allPeople = [...new Set(bills.flatMap(b => b.participants))];
   let personTotals = {};
-  participants.forEach((p) => { personTotals[p] = 0; });
+  allPeople.forEach((p) => { personTotals[p] = 0; });
 
   bills.forEach((bill) => {
-    const billContributions = calculateContribution(bill.items, participants, bill.tax, bill.discount);
-    participants.forEach((p) => {
-      personTotals[p] += billContributions[p] || 0;
+    if (bill.participants.length === 0) return;
+    const billContributions = calculateContribution(bill.items, bill.participants, bill.tax, bill.discount);
+    bill.participants.forEach((p) => {
+      personTotals[p] = parseFloat((personTotals[p] + (billContributions[p] || 0)).toFixed(2));
     });
   });
 

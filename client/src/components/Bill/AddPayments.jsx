@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { BillContext } from "../../context/BillContext";
 
 export default function AddPayments() {
-  const { participants, payments, setPayments, items, tax, discount } = useContext(BillContext);
+  const { allParticipants: participants, payments, setPayments, items, tax, discount } = useContext(BillContext);
   const [selectedPerson, setSelectedPerson] = useState("");
   const [amount, setAmount] = useState("");
   const [error, setError] = useState("");
