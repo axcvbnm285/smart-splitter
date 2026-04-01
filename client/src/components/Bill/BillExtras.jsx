@@ -9,10 +9,12 @@ export default function BillExtras() {
 
   const [discountType, setDiscountType] = useState("amount");
   const [discountInput, setDiscountInput] = useState("");
+  const [paymentsClearedWarning, setPaymentsClearedWarning] = useState(false);
 
   const handleTaxChange = (value) => {
     const num = parseFloat(value) || 0;
     if (num < 0 || num > 100000) return;
+    if (payments.length > 0) setPaymentsClearedWarning(true);
     setTax(num);
   };
 
@@ -20,6 +22,7 @@ export default function BillExtras() {
     setDiscountInput(value);
     const num = parseFloat(value) || 0;
     if (num < 0) return;
+    if (payments.length > 0) setPaymentsClearedWarning(true);
     if (discountType === "percentage") {
       if (num > 100) return;
       const subtotal = items.reduce((sum, item) => sum + item.price, 0);
@@ -41,6 +44,13 @@ export default function BillExtras() {
       <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
         📊 Bill Details
       </h3>
+
+      {paymentsClearedWarning && (
+        <div className="bg-orange-100 text-orange-700 px-4 py-2 rounded-xl mb-4 text-sm flex justify-between items-center">
+          <span>⚠️ Upfront payments were cleared because the bill total changed.</span>
+          <button onClick={() => setPaymentsClearedWarning(false)} className="ml-3 font-bold">✕</button>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>

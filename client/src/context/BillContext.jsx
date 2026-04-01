@@ -54,15 +54,24 @@ export const BillProvider = ({ children }) => {
   };
 
   const setItems = (items) => {
-    setBills(prev => prev.map(b => b.id === activeBillId ? { ...b, items } : b));
+    setBills(prev => prev.map(b => b.id === activeBillId
+      ? { ...b, items, payments: b.payments.length > 0 ? [] : b.payments }
+      : b
+    ));
   };
 
   const setTax = (tax) => {
-    setBills(prev => prev.map(b => b.id === activeBillId ? { ...b, tax } : b));
+    setBills(prev => prev.map(b => b.id === activeBillId
+      ? { ...b, tax, payments: b.payments.length > 0 ? [] : b.payments }
+      : b
+    ));
   };
 
   const setDiscount = (discount) => {
-    setBills(prev => prev.map(b => b.id === activeBillId ? { ...b, discount } : b));
+    setBills(prev => prev.map(b => b.id === activeBillId
+      ? { ...b, discount, payments: b.payments.length > 0 ? [] : b.payments }
+      : b
+    ));
   };
 
   const addBill = () => {
