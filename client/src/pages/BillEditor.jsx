@@ -52,6 +52,7 @@ export default function BillEditor() {
               📸 Scan Bill
             </button>
           </div>
+        </div>
       </motion.div>
 
       {/* Bill Tabs */}
