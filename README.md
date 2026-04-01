@@ -2,7 +2,7 @@
 
 A full-stack bill splitting application with AI-powered receipt scanning, multi-bill support, and intelligent settlement calculation.
 
-🔗 **Live Demo:** [your-frontend-url]  
+🔗 **Live Demo:** https://smart-splitter-git-main-axcvbnm285s-projects.vercel.app/
 🖥️ **Backend API:** [https://smart-splitter.onrender.com](https://smart-splitter.onrender.com)
 
 ---
