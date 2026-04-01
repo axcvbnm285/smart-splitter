@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function BillTable() {
-  const { items, setItems, participants } = useContext(BillContext);
+  const { items, setItems, participants, payments, tax, discount } = useContext(BillContext);
   const navigate = useNavigate();
 
   const toggleAssign = (itemId, person) => {
@@ -41,12 +41,20 @@ export default function BillTable() {
     setItems(items.filter((item) => item.id !== itemId));
   };
 
-  const total = items.reduce((sum, item) => sum + item.price, 0);
+  const billTotal = parseFloat((items.reduce((sum, item) => sum + item.price, 0) + tax - discount).toFixed(2));
+  const totalPaid = parseFloat(payments.reduce((sum, p) => sum + p.amount, 0).toFixed(2));
+  const paymentsIncomplete = payments.length > 0 && totalPaid < billTotal;
   const unassignedItems = items.filter(item => item.assignedTo.length === 0);
-  const canCalculate = items.length > 0 && participants.length >= 2 && unassignedItems.length === 0;
+  const canCalculate = items.length > 0 && participants.length >= 2 && unassignedItems.length === 0 && !paymentsIncomplete;
 
   return (
     <div>
+      {paymentsIncomplete && (
+        <div className="bg-orange-100 text-orange-700 px-4 py-2 rounded-xl mb-4 text-sm">
+          Upfront payments ({`₹${totalPaid.toFixed(2)}`}) must equal bill total ({`₹${billTotal.toFixed(2)}`})
+        </div>
+      )}
+
       {unassignedItems.length > 0 && (
         <div className="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-xl mb-4">
           {unassignedItems.length} item(s) not assigned to anyone
@@ -120,7 +128,7 @@ export default function BillTable() {
         <div className="border-t-2 border-gray-200 pt-4 mb-6">
           <div className="flex justify-between items-center text-lg sm:text-xl font-bold">
             <span>Total</span>
-            <span className="text-indigo-600">₹{total.toFixed(2)}</span>
+            <span className="text-indigo-600">₹{billTotal.toFixed(2)}</span>
           </div>
         </div>
       )}
@@ -133,6 +141,7 @@ export default function BillTable() {
         {!canCalculate && items.length === 0 && "Add items to calculate"}
         {!canCalculate && items.length > 0 && participants.length < 2 && "Add at least 2 participants"}
         {!canCalculate && unassignedItems.length > 0 && participants.length >= 2 && "Assign all items"}
+        {!canCalculate && paymentsIncomplete && "Upfront payments must equal bill total"}
         {canCalculate && "Calculate Split 📊"}
       </button>
     </div>

@@ -38,7 +38,7 @@ function SettlementList({ settlements, fmt }) {
 }
 
 export default function Result() {
-  const { payments, bills, allParticipants, currency } = useContext(BillContext);
+  const { bills, allParticipants, currency } = useContext(BillContext);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [combined, setCombined] = useState(false);
@@ -56,7 +56,7 @@ export default function Result() {
       .map(b => {
         const contributions = calculateContribution(b.items, b.participants, b.tax, b.discount);
         const total = parseFloat(Object.values(contributions).reduce((s, v) => s + v, 0).toFixed(2));
-        const paidByPayments = b.paidBy ? [{ person: b.paidBy, amount: total }] : [];
+        const paidByPayments = b.paidBy ? [{ person: b.paidBy, amount: total }] : b.payments;
         const settlements = calculateSettlement(contributions, paidByPayments);
         return { bill: b, contributions, total, settlements };
       });
@@ -65,15 +65,18 @@ export default function Result() {
   const combinedContributions = useMemo(() => calculateAllBillsContribution(bills), [bills]);
 
   const combinedAllPayments = useMemo(() => {
-    const paidByPayments = bills
-      .filter(b => b.paidBy)
-      .map(b => {
-        const contribs = calculateContribution(b.items, b.participants, b.tax, b.discount);
-        const total = parseFloat(Object.values(contribs).reduce((s, v) => s + v, 0).toFixed(2));
-        return { person: b.paidBy, amount: total };
-      });
-    return [...payments, ...paidByPayments];
-  }, [bills, payments]);
+    const allPayments = [];
+    bills.forEach(b => {
+      const contribs = calculateContribution(b.items, b.participants, b.tax, b.discount);
+      const billTotal = parseFloat(Object.values(contribs).reduce((s, v) => s + v, 0).toFixed(2));
+      if (b.paidBy) {
+        allPayments.push({ person: b.paidBy, amount: billTotal });
+      } else {
+        b.payments.forEach(p => allPayments.push(p));
+      }
+    });
+    return allPayments;
+  }, [bills]);
 
   const combinedSettlements = useMemo(() =>
     calculateSettlement(combinedContributions, combinedAllPayments),
@@ -124,7 +127,7 @@ export default function Result() {
         title: billTitle,
         participants: allParticipants,
         items: bills.flatMap(b => b.items),
-        payments,
+        payments: bills.flatMap(b => b.payments),
         tax: 0,
         discount: 0,
         total: combinedTotal,
@@ -246,7 +249,7 @@ export default function Result() {
                 </div>
               </motion.div>
 
-              {(payments.length > 0 || bills.some(b => b.paidBy)) && (
+              {(bills.some(b => b.payments.length > 0) || bills.some(b => b.paidBy)) && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6">
                   <h3 className="text-lg font-bold text-gray-800 mb-4">🔄 Who Pays Whom (Combined)</h3>
                   <SettlementList settlements={combinedSettlements} fmt={fmt} />

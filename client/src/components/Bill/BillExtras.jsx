@@ -3,23 +3,16 @@ import { BillContext } from "../../context/BillContext";
 
 export default function BillExtras() {
   const {
-    tax,
-    setTax,
-    discount,
-    setDiscount,
-    participants,
-    paidBy,
-    setPaidBy,
-    items,
+    tax, setTax, discount, setDiscount,
+    participants, paidBy, setPaidBy, items, payments,
   } = useContext(BillContext);
 
-  const [discountType, setDiscountType] = useState("amount"); // "amount" or "percentage"
+  const [discountType, setDiscountType] = useState("amount");
   const [discountInput, setDiscountInput] = useState("");
 
   const handleTaxChange = (value) => {
     const num = parseFloat(value) || 0;
-    if (num < 0) return;
-    if (num > 100000) return;
+    if (num < 0 || num > 100000) return;
     setTax(num);
   };
 
@@ -27,12 +20,10 @@ export default function BillExtras() {
     setDiscountInput(value);
     const num = parseFloat(value) || 0;
     if (num < 0) return;
-
     if (discountType === "percentage") {
       if (num > 100) return;
       const subtotal = items.reduce((sum, item) => sum + item.price, 0);
-      const discountAmount = (subtotal * num) / 100;
-      setDiscount(discountAmount);
+      setDiscount((subtotal * num) / 100);
     } else {
       if (num > 100000) return;
       setDiscount(num);
@@ -68,18 +59,16 @@ export default function BillExtras() {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Discount</label>
           <div className="flex gap-2">
-            <div className="flex-1 relative">
-              <input
-                type="number"
-                value={discountInput}
-                min="0"
-                max={discountType === "percentage" ? "100" : "100000"}
-                step="0.01"
-                onChange={(e) => handleDiscountInputChange(e.target.value)}
-                placeholder={discountType === "percentage" ? "Enter %" : "Enter ₹"}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition"
-              />
-            </div>
+            <input
+              type="number"
+              value={discountInput}
+              min="0"
+              max={discountType === "percentage" ? "100" : "100000"}
+              step="0.01"
+              onChange={(e) => handleDiscountInputChange(e.target.value)}
+              placeholder={discountType === "percentage" ? "Enter %" : "Enter ₹"}
+              className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition"
+            />
             <select
               value={discountType}
               onChange={(e) => handleDiscountTypeChange(e.target.value)}
@@ -95,22 +84,24 @@ export default function BillExtras() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Who Paid Full Bill?
-          </label>
-          <select
-            value={paidBy}
-            onChange={(e) => setPaidBy(e.target.value)}
-            disabled={participants.length === 0}
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <option value="">Select</option>
-            {participants.map((person) => (
-              <option key={person} value={person}>
-                {person}
-              </option>
-            ))}
-          </select>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Who Paid Full Bill?</label>
+          {payments.length > 0 ? (
+            <div className="bg-indigo-50 border border-indigo-200 text-indigo-700 px-3 py-3 rounded-xl text-xs">
+              Remove all upfront payments to use this instead.
+            </div>
+          ) : (
+            <select
+              value={paidBy}
+              onChange={(e) => setPaidBy(e.target.value)}
+              disabled={participants.length === 0}
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <option value="">Select</option>
+              {participants.map((person) => (
+                <option key={person} value={person}>{person}</option>
+              ))}
+            </select>
+          )}
         </div>
       </div>
     </div>
