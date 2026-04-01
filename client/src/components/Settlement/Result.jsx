@@ -8,10 +8,12 @@ import AnimatedNumber from "../Common/AnimatedNumber";
 import confetti from "canvas-confetti";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const CHART_COLORS = ["#6366f1", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981", "#3b82f6", "#ef4444"];
 
-function SettlementList({ settlements }) {
+function SettlementList({ settlements, fmt }) {
   if (settlements.length === 0) {
     return (
       <div className="text-center py-6">
@@ -32,15 +34,43 @@ function SettlementList({ settlements }) {
             <span className="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0">{s.to[0]}</span>
             <span className="font-semibold text-gray-700 text-sm">{s.to}</span>
           </div>
-          <span className="font-bold text-green-600 shrink-0"><AnimatedNumber value={s.amount} /></span>
+          <span className="font-bold text-green-600 shrink-0">{fmt(s.amount)}</span>
         </div>
       ))}
     </div>
   );
 }
 
+function CategoryChart({ bills, fmt }) {
+  const data = useMemo(() => {
+    const totals = {};
+    bills.forEach(b => b.items.forEach(item => {
+      const cat = item.category || "Other";
+      totals[cat] = (totals[cat] || 0) + item.price;
+    }));
+    return Object.entries(totals).map(([name, value]) => ({ name, value: parseFloat(value.toFixed(2)) }));
+  }, [bills]);
+
+  if (data.length === 0) return null;
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6">
+      <h3 className="text-lg font-bold text-gray-800 mb-4">📊 Spending by Category</h3>
+      <ResponsiveContainer width="100%" height={240}>
+        <PieChart>
+          <Pie data={data} cx="50%" cy="50%" innerRadius={55} outerRadius={90} paddingAngle={3} dataKey="value">
+            {data.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
+          </Pie>
+          <Tooltip formatter={(val) => fmt(val)} />
+          <Legend />
+        </PieChart>
+      </ResponsiveContainer>
+    </motion.div>
+  );
+}
+
 export default function Result() {
-  const { payments, bills, allParticipants } = useContext(BillContext);
+  const { payments, bills, allParticipants, currency } = useContext(BillContext);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [combined, setCombined] = useState(false);
@@ -49,7 +79,9 @@ export default function Result() {
   const [billTitle, setBillTitle] = useState("");
   const [showSaveDialog, setShowSaveDialog] = useState(false);
 
-  // Per-bill calculations
+  const sym = currency?.symbol || "₹";
+  const fmt = (val) => `${sym}${typeof val === "number" ? val.toFixed(2) : val}`;
+
   const perBillData = useMemo(() => {
     return bills
       .filter(b => b.participants.length >= 2 && b.items.length > 0)
@@ -62,7 +94,6 @@ export default function Result() {
       });
   }, [bills]);
 
-  // Combined calculations
   const combinedContributions = useMemo(() => calculateAllBillsContribution(bills), [bills]);
 
   const combinedAllPayments = useMemo(() => {
@@ -104,10 +135,10 @@ export default function Result() {
 
   const buildShareText = () => {
     if (combined) {
-      return `💰 Combined Bill Settlement\n\nTotal: ₹${combinedTotal.toFixed(2)}\n\n${combinedSettlements.map(s => `${s.from} → ${s.to}: ₹${s.amount}`).join("\n")}`;
+      return `💰 Combined Bill Settlement\n\nTotal: ${fmt(combinedTotal)}\n\n${combinedSettlements.map(s => `${s.from} → ${s.to}: ${fmt(s.amount)}`).join("\n")}`;
     }
     return perBillData.map(({ bill, total, settlements }) =>
-      `📋 ${bill.name} (₹${total.toFixed(2)})\n${settlements.map(s => `${s.from} → ${s.to}: ₹${s.amount}`).join("\n") || "All settled!"}`
+      `📋 ${bill.name} (${fmt(total)})\n${settlements.map(s => `${s.from} → ${s.to}: ${fmt(s.amount)}`).join("\n") || "All settled!"}`
     ).join("\n\n");
   };
 
@@ -154,7 +185,6 @@ export default function Result() {
             <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
               🎉 Settlement Summary
             </h2>
-            {/* Toggle */}
             <div className="flex items-center bg-white/80 backdrop-blur-md rounded-2xl shadow p-1 gap-1 self-start sm:self-auto">
               <button
                 onClick={() => setCombined(false)}
@@ -188,7 +218,6 @@ export default function Result() {
                   transition={{ delay: idx * 0.08 }}
                   className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden"
                 >
-                  {/* Bill header */}
                   <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4 flex justify-between items-center">
                     <div>
                       <h3 className="text-lg font-bold text-white">{bill.name}</h3>
@@ -196,29 +225,27 @@ export default function Result() {
                     </div>
                     <div className="text-right">
                       <p className="text-indigo-200 text-xs">Total</p>
-                      <p className="text-white text-xl font-bold">₹{total.toFixed(2)}</p>
+                      <p className="text-white text-xl font-bold">{fmt(total)}</p>
                     </div>
                   </div>
 
                   <div className="p-5 space-y-4">
-                    {/* Individual shares */}
                     <div>
                       <p className="text-sm font-semibold text-gray-500 mb-2">💰 Individual Share</p>
                       <div className="space-y-2">
                         {Object.entries(contributions).map(([person, amount]) => (
                           <div key={person} className="flex justify-between items-center p-2 bg-gray-50 rounded-xl">
                             <span className="font-medium text-gray-700">{person}</span>
-                            <span className="font-bold text-indigo-600"><AnimatedNumber value={amount} /></span>
+                            <span className="font-bold text-indigo-600">{fmt(amount)}</span>
                           </div>
                         ))}
                       </div>
                     </div>
 
-                    {/* Who pays whom */}
                     {bill.paidBy && (
                       <div>
                         <p className="text-sm font-semibold text-gray-500 mb-2">🔄 Who Pays Whom</p>
-                        <SettlementList settlements={settlements} />
+                        <SettlementList settlements={settlements} fmt={fmt} />
                       </div>
                     )}
 
@@ -228,34 +255,36 @@ export default function Result() {
                   </div>
                 </motion.div>
               ))}
+
+              {/* Category chart in per-bill view */}
+              <CategoryChart bills={bills} fmt={fmt} />
             </motion.div>
           ) : (
             <motion.div key="combined" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
-              {/* Combined total */}
               <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl shadow-xl p-6 sm:p-8 text-white text-center">
                 <p className="text-lg opacity-90 mb-1">Combined Total</p>
-                <p className="text-3xl sm:text-5xl font-bold">₹{combinedTotal.toFixed(2)}</p>
+                <p className="text-3xl sm:text-5xl font-bold">{fmt(combinedTotal)}</p>
                 <p className="text-indigo-200 text-sm mt-2">{bills.length} bill{bills.length > 1 ? "s" : ""} · {allParticipants.length} people</p>
               </motion.div>
 
-              {/* Combined individual shares */}
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6">
                 <h3 className="text-lg font-bold text-gray-800 mb-4">💰 Individual Share (All Bills)</h3>
                 <div className="space-y-2">
                   {Object.entries(combinedContributions).map(([person, amount]) => (
                     <div key={person} className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
                       <span className="font-semibold text-gray-700">{person}</span>
-                      <span className="text-lg font-bold text-indigo-600"><AnimatedNumber value={amount} /></span>
+                      <span className="text-lg font-bold text-indigo-600">{fmt(amount)}</span>
                     </div>
                   ))}
                 </div>
               </motion.div>
 
-              {/* Combined settlements */}
+              <CategoryChart bills={bills} fmt={fmt} />
+
               {(payments.length > 0 || bills.some(b => b.paidBy)) && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6">
                   <h3 className="text-lg font-bold text-gray-800 mb-4">🔄 Who Pays Whom (Combined)</h3>
-                  <SettlementList settlements={combinedSettlements} />
+                  <SettlementList settlements={combinedSettlements} fmt={fmt} />
                 </motion.div>
               )}
             </motion.div>
@@ -283,7 +312,6 @@ export default function Result() {
           </a>
         </motion.div>
 
-        {/* Save dialog */}
         {showSaveDialog && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-2xl p-6 max-w-md w-full">

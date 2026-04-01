@@ -1,11 +1,22 @@
 import { createContext, useState } from "react";
 
+export const CURRENCIES = [
+  { code: "INR", symbol: "₹", label: "Indian Rupee" },
+  { code: "USD", symbol: "$", label: "US Dollar" },
+  { code: "EUR", symbol: "€", label: "Euro" },
+  { code: "GBP", symbol: "£", label: "British Pound" },
+  { code: "JPY", symbol: "¥", label: "Japanese Yen" },
+];
+
+export const CATEGORIES = ["Food", "Drinks", "Travel", "Stay", "Entertainment", "Shopping", "Other"];
+
 export const BillContext = createContext();
 
 export const BillProvider = ({ children }) => {
   // Global pool used for payments/paidBy dropdowns
   const [allParticipants, setAllParticipants] = useState([]);
   const [payments, setPayments] = useState([]);
+  const [currency, setCurrency] = useState(CURRENCIES[0]);
 
   // Each bill has its own participants list
   const [bills, setBills] = useState([
@@ -107,6 +118,8 @@ export const BillProvider = ({ children }) => {
         addBill,
         removeBill,
         renameBill,
+        currency,
+        setCurrency,
       }}
     >
       {children}

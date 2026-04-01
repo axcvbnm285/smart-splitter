@@ -1,11 +1,12 @@
 import { useContext, useState } from "react";
-import { BillContext } from "../../context/BillContext";
+import { BillContext, CATEGORIES } from "../../context/BillContext";
 import { motion } from "framer-motion";
 
 export default function AddItem() {
   const { items, setItems, payments, tax, discount } = useContext(BillContext);
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
+  const [category, setCategory] = useState("Food");
   const [error, setError] = useState("");
 
   const addItem = () => {
@@ -45,12 +46,14 @@ export default function AddItem() {
       id: Date.now(),
       name: name.trim(),
       price: Number(price),
+      category,
       assignedTo: [],
     };
 
     setItems([...items, newItem]);
     setName("");
     setPrice("");
+    setCategory("Food");
   };
 
   return (
@@ -74,6 +77,13 @@ export default function AddItem() {
           onChange={(e) => setName(e.target.value)}
           className="w-full flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition"
         />
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="w-full sm:w-36 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition"
+        >
+          {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+        </select>
         <input
           type="number"
           placeholder="Price"
