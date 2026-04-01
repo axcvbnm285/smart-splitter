@@ -115,15 +115,15 @@ export default function BillEditor() {
           </div>
           
           <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg p-4 sm:p-6">
-            <AddPayments />
-          </div>
-          
-          <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg p-4 sm:p-6">
             <AddItem />
           </div>
           
           <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg p-4 sm:p-6">
             <BillExtras />
+          </div>
+
+          <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg p-4 sm:p-6">
+            <AddPayments />
           </div>
         </motion.div>
 
