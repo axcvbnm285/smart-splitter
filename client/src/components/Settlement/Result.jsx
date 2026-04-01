@@ -213,15 +213,15 @@ export default function Result() {
                       </div>
                     </div>
 
-                    {bill.paidBy && (
+                    {(bill.paidBy || bill.payments.length > 0) && (
                       <div>
                         <p className="text-sm font-semibold text-gray-500 mb-2">🔄 Who Pays Whom</p>
                         <SettlementList settlements={settlements} fmt={fmt} />
                       </div>
                     )}
 
-                    {!bill.paidBy && (
-                      <p className="text-xs text-gray-400 italic">Set "Who Paid Full Bill?" in Bill Details to see settlements for this bill.</p>
+                    {!bill.paidBy && bill.payments.length === 0 && (
+                      <p className="text-xs text-gray-400 italic">Set "Who Paid Full Bill?" or add upfront payments in Bill Details to see settlements.</p>
                     )}
                   </div>
                 </motion.div>
