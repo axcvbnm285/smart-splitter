@@ -8,10 +8,6 @@ import AnimatedNumber from "../Common/AnimatedNumber";
 import confetti from "canvas-confetti";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
-const CHART_COLORS = ["#6366f1", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981", "#3b82f6", "#ef4444"];
 
 function SettlementList({ settlements, fmt }) {
   if (settlements.length === 0) {
@@ -38,34 +34,6 @@ function SettlementList({ settlements, fmt }) {
         </div>
       ))}
     </div>
-  );
-}
-
-function CategoryChart({ bills, fmt }) {
-  const data = useMemo(() => {
-    const totals = {};
-    bills.forEach(b => b.items.forEach(item => {
-      const cat = item.category || "Other";
-      totals[cat] = (totals[cat] || 0) + item.price;
-    }));
-    return Object.entries(totals).map(([name, value]) => ({ name, value: parseFloat(value.toFixed(2)) }));
-  }, [bills]);
-
-  if (data.length === 0) return null;
-
-  return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6">
-      <h3 className="text-lg font-bold text-gray-800 mb-4">📊 Spending by Category</h3>
-      <ResponsiveContainer width="100%" height={240}>
-        <PieChart>
-          <Pie data={data} cx="50%" cy="50%" innerRadius={55} outerRadius={90} paddingAngle={3} dataKey="value">
-            {data.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
-          </Pie>
-          <Tooltip formatter={(val) => fmt(val)} />
-          <Legend />
-        </PieChart>
-      </ResponsiveContainer>
-    </motion.div>
   );
 }
 
@@ -257,7 +225,6 @@ export default function Result() {
               ))}
 
               {/* Category chart in per-bill view */}
-              <CategoryChart bills={bills} fmt={fmt} />
             </motion.div>
           ) : (
             <motion.div key="combined" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
@@ -278,8 +245,6 @@ export default function Result() {
                   ))}
                 </div>
               </motion.div>
-
-              <CategoryChart bills={bills} fmt={fmt} />
 
               {(payments.length > 0 || bills.some(b => b.paidBy)) && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6">
