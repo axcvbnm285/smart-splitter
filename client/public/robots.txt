@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Allow: /login
+Allow: /register
+Disallow: /edit
+Disallow: /summary
+Disallow: /history
+Disallow: /upload
+Disallow: /preview
+
+Sitemap: https://your-frontend-url.vercel.app/sitemap.xml
