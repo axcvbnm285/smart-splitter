@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
-import { AuthContext } from "../context/AuthContext";
 import { BillContext } from "../context/BillContext";
 import { motion } from "framer-motion";
 import PageWrapper from "../components/Common/PageWrapper";
@@ -13,7 +12,6 @@ import CurrencySelector from "../components/Common/CurrencySelector";
 
 export default function BillEditor() {
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
   const { bills, activeBillId, setActiveBillId, addBill, removeBill, renameBill } = useContext(BillContext);
   const [editingBillId, setEditingBillId] = useState(null);
   const [editingName, setEditingName] = useState("");
