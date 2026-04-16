@@ -1,12 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
-import PageWrapper from "../components/Common/PageWrapper";
 import { motion } from "framer-motion";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { user, logout } = useContext(AuthContext);
 
   return (
     <div className="relative min-h-screen overflow-hidden">
@@ -18,35 +14,14 @@ export default function Home() {
       </div>
 
       {/* Navigation */}
-      <nav className="relative z-10 flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center px-4 sm:px-8 py-6">
-        <motion.div 
+      <nav className="relative z-10 flex justify-between items-center px-4 sm:px-8 py-6">
+        <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"
         >
           SplitSmart
         </motion.div>
-        
-        {user && (
-          <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-4 bg-white/80 backdrop-blur-sm px-4 sm:px-6 py-3 rounded-2xl sm:rounded-full shadow-lg"
-          >
-            <div className="flex items-center gap-2 min-w-0">
-              <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold">
-                {user.name[0].toUpperCase()}
-              </div>
-              <span className="font-medium text-gray-700 truncate">{user.name}</span>
-            </div>
-            <button 
-              onClick={logout} 
-              className="text-red-500 hover:text-red-600 font-medium transition"
-            >
-              Logout
-            </button>
-          </motion.div>
-        )}
       </nav>
 
       {/* Hero Section */}
@@ -82,8 +57,7 @@ export default function Home() {
             Track who paid what, settle up instantly.
           </motion.p>
 
-          {user ? (
-            <motion.div
+          <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
@@ -100,36 +74,9 @@ export default function Home() {
                 onClick={() => navigate("/upload")}
                 className="w-full sm:w-auto px-6 sm:px-8 py-4 bg-white/80 backdrop-blur-sm text-indigo-600 rounded-2xl font-semibold text-base sm:text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-indigo-200"
               >
-                Upload Bill 📸
-              </button>
-              <button
-                onClick={() => navigate("/history")}
-                className="w-full sm:w-auto px-6 sm:px-8 py-4 bg-white/80 backdrop-blur-sm text-indigo-600 rounded-2xl font-semibold text-base sm:text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-indigo-200"
-              >
-                My Bills 📋
+                Scan Bill 📸
               </button>
             </motion.div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="w-full flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center"
-            >
-              <button
-                onClick={() => navigate("/login")}
-                className="w-full sm:w-auto px-6 sm:px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-semibold text-base sm:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
-              >
-                Login
-              </button>
-              <button
-                onClick={() => navigate("/register")}
-                className="w-full sm:w-auto px-6 sm:px-8 py-4 bg-white/80 backdrop-blur-sm text-indigo-600 rounded-2xl font-semibold text-base sm:text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-indigo-200"
-              >
-                Get Started
-              </button>
-            </motion.div>
-          )}
         </motion.div>
 
         {/* Feature Cards */}

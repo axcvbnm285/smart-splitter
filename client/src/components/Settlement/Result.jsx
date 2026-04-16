@@ -1,13 +1,11 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BillContext } from "../../context/BillContext";
-import { AuthContext } from "../../context/AuthContext";
 import { calculateContribution, calculateAllBillsContribution } from "../../utils/calculateContribution";
 import { calculateSettlement } from "../../utils/calculateSettlement";
 import AnimatedNumber from "../Common/AnimatedNumber";
 import confetti from "canvas-confetti";
 import { motion, AnimatePresence } from "framer-motion";
-import axios from "axios";
 
 function SettlementList({ settlements, fmt }) {
   if (settlements.length === 0) {
@@ -39,13 +37,8 @@ function SettlementList({ settlements, fmt }) {
 
 export default function Result() {
   const { bills, allParticipants, currency } = useContext(BillContext);
-  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [combined, setCombined] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [billTitle, setBillTitle] = useState("");
-  const [showSaveDialog, setShowSaveDialog] = useState(false);
 
   const sym = currency?.symbol || "₹";
   const fmt = (val) => `${sym}${typeof val === "number" ? val.toFixed(2) : val}`;
@@ -116,31 +109,6 @@ export default function Result() {
   const copyToClipboard = () => {
     navigator.clipboard.writeText(buildShareText());
     alert("Copied to clipboard!");
-  };
-
-  const saveBill = async () => {
-    if (!user) { alert("Please login to save bills"); navigate("/login"); return; }
-    if (!billTitle.trim()) { alert("Please enter a bill title"); return; }
-    setSaving(true);
-    try {
-      await axios.post(`${API_URL}/bills/save`, {
-        title: billTitle,
-        participants: allParticipants,
-        items: bills.flatMap(b => b.items),
-        payments: bills.flatMap(b => b.payments),
-        tax: 0,
-        discount: 0,
-        total: combinedTotal,
-        settlements: combinedSettlements,
-      });
-      setSaved(true);
-      setShowSaveDialog(false);
-      alert("Bill saved successfully!");
-    } catch {
-      alert("Failed to save bill");
-    } finally {
-      setSaving(false);
-    }
   };
 
   return (
@@ -260,11 +228,8 @@ export default function Result() {
         </AnimatePresence>
 
         {/* Actions */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6">
-          <button onClick={() => setShowSaveDialog(true)} disabled={saved} className="px-4 py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition disabled:opacity-50">
-            {saved ? "✓ Saved" : "💾 Save"}
-          </button>
-          <button onClick={copyToClipboard} className="px-4 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="mt-6">
+          <button onClick={copyToClipboard} className="w-full px-4 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition">
             📋 Copy
           </button>
         </motion.div>
@@ -280,28 +245,7 @@ export default function Result() {
           </a>
         </motion.div>
 
-        {showSaveDialog && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl p-6 max-w-md w-full">
-              <h3 className="text-xl font-bold mb-4">Save Bill</h3>
-              <input
-                type="text"
-                placeholder="Enter bill title"
-                value={billTitle}
-                onChange={(e) => setBillTitle(e.target.value)}
-                className="w-full px-4 py-2 border-2 border-gray-200 rounded-xl mb-4"
-              />
-              <div className="flex gap-3">
-                <button onClick={saveBill} disabled={saving} className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 disabled:opacity-50">
-                  {saving ? "Saving..." : "Save"}
-                </button>
-                <button onClick={() => setShowSaveDialog(false)} className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300">
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+
       </div>
     </div>
   );
