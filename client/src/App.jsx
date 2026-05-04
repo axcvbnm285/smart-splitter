@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { BillProvider } from "./context/BillContext";
 import ErrorBoundary from "./components/Common/ErrorBoundary";
+import InstallPrompt from "./components/Common/InstallPrompt";
 
 const Home = lazy(() => import("./pages/Home"));
 const BillEditor = lazy(() => import("./pages/BillEditor"));
@@ -29,6 +30,7 @@ function App() {
               <Route path="/summary" element={<Summary />} />
             </Routes>
           </Suspense>
+          <InstallPrompt />
         </BrowserRouter>
       </BillProvider>
     </ErrorBoundary>
